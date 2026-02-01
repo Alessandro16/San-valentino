@@ -1,29 +1,231 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
-    <title>Domanda Importante</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will u be my Valentine?</title>
     <style>
-        body { display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; font-family: sans-serif; }
-        .buttons { position: relative; width: 100%; height: 50px; display: flex; justify-content: center; gap: 20px; }
-        #no { position: absolute; transition: 0.1s; }
-        button { padding: 10px 20px; cursor: pointer; }
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fce4ec;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .card {
+            background: white;
+            padding: 20px; /* Ridotto per far spazio all'immagine */
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative; 
+            width: 450px;
+            height: 500px; /* Aumentata l'altezza per l'immagine */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+			padding-top: 10px; /* Ridotto al minimo per portare tutto in alto */
+			justify-content: flex-start; /* Gli elementi partono dall'alto invece che dal centro */
+        }
+
+        /* Stile per l'immagine */
+        .img-container {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .img-container img {
+            max-height: 100%;
+            border-radius: 15px;
+        }
+
+        h1 { 
+            color: #d81b60; 
+            margin-top: 0;      /* Rimuove lo spazio sopra la scritta */
+			margin-bottom: 0; /* Lascia un po' di spazio sotto verso i tasti */
+            font-size: 34px;
+            z-index: 2; 	
+        }
+		
+		h2 { 
+			margin-top: 60px;
+            font-size: 10px;
+            z-index: 2; 	
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            height: 100px; /* Spazio per il movimento */
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            font-weight: bold;
+        }
+
+        .btn-container {
+			display: flex;
+			justify-content: center; /* Mantiene i tasti centrati all'inizio */
+			align-items: center;
+			gap: 20px;
+			width: 100%;
+			height: 80px;
+			position: relative;
+			margin-top: 100px;
+
+		}
+
+		/* Creiamo una zona "fissa" per il tasto Sì */
+		.si-wrapper {
+			width: 100px; /* Regola in base alla larghezza del tuo tasto */
+			display: flex;
+			justify-content: center;
+		}
+		
+		#si {
+            background-color: #e91e63;
+            color: white;
+            z-index: 1;
+        }
+
+        #no {
+            background-color: #bdbdbd;
+            color: #424242;
+            z-index: 999;
+            transition: 0.1s ease;
+        }
+		
+		#buttonsContainer, #confirmationContainer {
+			transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+		}
     </style>
 </head>
 <body>
-    <h1>Vuoi procedere?</h1>
-    <div class="buttons">
-        <button onclick="alert('Hai scelto SI!')">Sì</button>
-        <button id="no">No</button>
+
+    <div class="card" id="mainCard">
+        <div class="img-container">
+            <img src="Orso.png" alt="Cute gif">
+        </div>
+
+        <h1>Will u be my Valentine?</h1>
+		
+		<div id="cardcontainer">
+			<div class="btn-container">
+				<div class="si-wrapper">
+					<button id="si">Yes</button>
+				</div>
+				<button id="no">No</button>
+				<div id="placeholder" style="width: 80px; display: none;"></div>
+			</div>
+			<div>
+				<h2>"No" seems a bit shy🙈</h2>
+			</div>
+		</div>
+		<div id="confirmationContainer" style="display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; margin-top: auto;">
+			<img id="confirmationImage" src="Conferma.gif" alt="Congratulazioni" style="max-width: 75%; border-radius: 10px; margin-bottom: 15px;">
+		</div>
     </div>
 
     <script>
         const noBtn = document.getElementById('no');
-        noBtn.addEventListener('mouseover', () => {
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
-        });
+        const siBtn = document.getElementById('si');
+        const card = document.getElementById('mainCard');
+        const padding = 30;
+        // Calcola limiti basati sulla card
+        const maxX = card.clientWidth - noBtn.offsetWidth - padding;
+        const maxY = card.clientHeight - noBtn.offsetHeight - padding;
+		
+		
+		console.log('SX:', card.getBoundingClientRect().left + 40)
+		console.log('DX:', card.getBoundingClientRect().right - 40)
+		console.log('TOP:', card.getBoundingClientRect().top + 40)
+		console.log('BOT:', card.getBoundingClientRect().bottom - 40)
+		
+		let X1 = card.getBoundingClientRect().left + 40
+		let X2 = card.getBoundingClientRect().right - 40
+		let Y1 = card.getBoundingClientRect().top + card.getBoundingClientRect().bottom/2 
+		let Y2 = card.getBoundingClientRect().bottom - 80
+
+        let scalaSi = 1;
+		let scalaNo = 1;
+        let primovolte = true;
+	
+		const buttonsContainer = document.getElementById('cardcontainer');
+		const confirmationContainer = document.getElementById('confirmationContainer');
+		const confirmationImage = document.getElementById('confirmationImage'); // Riferimento all'immagine di conferma
+
+		// Aggiungiamo l'event listener per il tasto Sì
+		siBtn.addEventListener('click', () => {
+			// 1. Nascondi il contenitore dei bottoni
+			buttonsContainer.style.opacity = '0'; // Applica la transizione
+			buttonsContainer.style.transform = 'translateY(20px)'; // Sposta leggermente verso il basso
+
+			// Dopo un breve ritardo per la transizione, nascondi l'elemento e mostra quello nuovo
+			setTimeout(() => {
+				buttonsContainer.style.display = 'none';
+
+				// 2. Mostra il contenitore di conferma
+				confirmationContainer.style.display = 'flex'; // Rendi visibile (con flex per il layout interno)
+				confirmationContainer.style.opacity = '1';
+				confirmationContainer.style.transform = 'translateY(0)';
+				
+
+			}, 500); 
+		});
+
+        const muoviPulsante = () => {
+			// Al primo tocco, "stacchiamo" il tasto dal contenitore
+			if (primovolte) {
+				// 1. Mostriamo il segnaposto per occupare lo spazio a destra
+				document.getElementById('placeholder').style.display = 'block';
+				
+				// 2. Rendiamo il tasto No libero di muoversi sullo schermo
+				noBtn.style.position = 'fixed';
+				
+				primovolte = false;
+			}
+	
+			randomX = Math.floor(Math.random()*(X2-X1)) + X1
+			randomY = Math.floor(Math.random()*(Y2-Y1)) + Y1
+
+					
+			console.log('X: ', randomX)
+			console.log('Y: ', randomY)
+
+            noBtn.style.left = randomX + "px";
+            noBtn.style.top = randomY + "px";
+
+            // Crescita del tasto Sì
+            if (scalaSi < 2) {
+                scalaSi += 0.3;
+				scalaNo -= 0.1
+                siBtn.style.transform = `scale(${scalaSi})`;
+				noBtn.style.transform = `scale(${scalaNo})`;
+            }
+        };
+
+        noBtn.addEventListener('mouseenter', muoviPulsante);
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); muoviPulsante(); });
     </script>
+
 </body>
 </html>
