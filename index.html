@@ -17,30 +17,32 @@
         }
 
         .card {
-            background: white;
-            padding: 20px; /* Ridotto per far spazio all'immagine */
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center;
-            position: relative; 
-            width: 450px;
-            height: 500px; /* Aumentata l'altezza per l'immagine */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-			padding-top: 10px; /* Ridotto al minimo per portare tutto in alto */
-			justify-content: flex-start; /* Gli elementi partono dall'alto invece che dal centro */
-        }
+			background: white;
+			padding: 20px;
+			border-radius: 20px;
+			box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+			text-align: center;
+			position: relative; 
+			
+			/* MODIFICA QUI PER IL MOBILE */
+			width: 90%;          /* Occupa quasi tutto lo schermo su mobile */
+			max-width: 450px;    /* Ma non supera i 450px su PC */
+			height: auto;        /* L'altezza si adatta al contenuto */
+			min-height: 500px;
+			
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding-top: 10px;
+			justify-content: flex-start;
+		}
 
-        /* Stile per l'immagine */
-        .img-container {
-            width: 100%;
-            height: 200px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 10px;
-        }
+		/* Assicuriamoci che l'immagine non esca mai dai bordi */
+		.img-container img {
+			max-width: 100%;
+			height: auto;
+			border-radius: 15px;
+		}
 
         .img-container img {
             max-height: 100%;
@@ -149,21 +151,6 @@
         const noBtn = document.getElementById('no');
         const siBtn = document.getElementById('si');
         const card = document.getElementById('mainCard');
-        const padding = 30;
-        // Calcola limiti basati sulla card
-        const maxX = card.clientWidth - noBtn.offsetWidth - padding;
-        const maxY = card.clientHeight - noBtn.offsetHeight - padding;
-		
-		
-		console.log('SX:', card.getBoundingClientRect().left + 40)
-		console.log('DX:', card.getBoundingClientRect().right - 40)
-		console.log('TOP:', card.getBoundingClientRect().top + 40)
-		console.log('BOT:', card.getBoundingClientRect().bottom - 40)
-		
-		let X1 = card.getBoundingClientRect().left + 40
-		let X2 = card.getBoundingClientRect().right - 40
-		let Y1 = card.getBoundingClientRect().top + card.getBoundingClientRect().bottom/2 
-		let Y2 = card.getBoundingClientRect().bottom - 80
 
         let scalaSi = 1;
 		let scalaNo = 1;
@@ -193,6 +180,11 @@
 		});
 
         const muoviPulsante = () => {
+			let X1 = card.getBoundingClientRect().left + 40
+			let X2 = card.getBoundingClientRect().right - 40
+			let Y1 = card.getBoundingClientRect().top + card.getBoundingClientRect().bottom/2 
+			let Y2 = card.getBoundingClientRect().bottom - 80
+		
 			// Al primo tocco, "stacchiamo" il tasto dal contenitore
 			if (primovolte) {
 				// 1. Mostriamo il segnaposto per occupare lo spazio a destra
